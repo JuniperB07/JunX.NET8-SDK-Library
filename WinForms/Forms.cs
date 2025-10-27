@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace JunX.NET8.WinForms
 {
@@ -86,6 +88,80 @@ namespace JunX.NET8.WinForms
             foreach (Control C in Controls)
                 C.Text = string.Empty;
         }
+        /// <summary>
+        /// Sets the size of a collection of UI controls.
+        /// </summary>
+        /// <param name="Controls">The collection of controls to update.</param>
+        /// <param name="Size">The size to apply to each control.</param>
+        /// <remarks>
+        /// Updates the <c>Size</c> property of each control in the collection to the specified <c>System.Drawing.Size</c> value.
+        /// Useful for enforcing uniform layout dimensions, responsive design adjustments, or theme-based UI scaling.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetSize(IEnumerable<Control> Controls, Size Size)
+        {
+            foreach (Control ctrl in Controls)
+                ctrl.Size = Size;
+        }
+        /// <summary>
+        /// Sets the size of multiple UI controls using corresponding <see cref="Size"/> values.
+        /// </summary>
+        /// <param name="Controls">The collection of controls to update.</param>
+        /// <param name="Sizes">The collection of <see cref="Size"/>  values to apply, one per control.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the number of controls does not match the number of size values.
+        /// </exception>
+        /// <remarks>
+        /// Updates the <see cref="Size"/>  property of each control in the collection using the corresponding <see cref="Size"/>  at the same index.
+        /// Useful for dynamic layout adjustments, responsive UI scaling, or metadata-driven form rendering.
+        /// Ensure both collections are non-null and aligned in length to avoid index mismatches.
+        /// </remarks>
+        public static void SetSizes(IEnumerable<Control> Controls, IEnumerable<Size> Sizes)
+        {
+            if (Controls.Count() != Sizes.Count())
+                throw new ArgumentException("Collections size mismatch.");
+
+            for (int i = 0; i < Controls.Count(); i++)
+                Controls.ElementAt(i).Size = Sizes.ElementAt(i);
+        }
+        /// <summary>
+        /// Sets the font of a collection of UI controls.
+        /// </summary>
+        /// <param name="Controls">The collection of controls to update.</param>
+        /// <param name="Font">The font to apply to each control.</param>
+        /// <remarks>
+        /// Updates the <c>Font</c> property of each control in the collection to the specified <c>System.Drawing.Font</c> instance.
+        /// Useful for enforcing consistent typography across grouped controls, applying theme-based styling, or dynamically adjusting font settings.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetFont(IEnumerable<Control> Controls, Font Font)
+        {
+            foreach (Control ctrl in Controls)
+                ctrl.Font = Font;
+        }
+        /// <summary>
+        /// Sets the font of multiple UI controls using corresponding <see cref="Font"/> instances.
+        /// </summary>
+        /// <param name="Controls">The collection of controls to update.</param>
+        /// <param name="Fonts">The collection of <see cref="Font"/> instances to apply, one per control.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the number of controls does not match the number of font instances.
+        /// </exception>
+        /// <remarks>
+        /// Updates the <see cref="Font"/> property of each control in the collection using the corresponding <see cref="Font"/> at the same index.
+        /// Useful for dynamic typography adjustments, theme-based styling, or metadata-driven UI rendering.
+        /// Ensure both collections are non-null and aligned in length to avoid index mismatches.
+        /// </remarks>
+        public static void SetFonts(IEnumerable<Control> Controls, IEnumerable<Font> Fonts)
+        {
+            if(Controls.Count() != Fonts.Count())
+                throw new ArgumentException("Collections size mismatch.");
+
+            for (int i = 0; i < Controls.Count(); i++)
+                Controls.ElementAt(i).Font = Fonts.ElementAt(i);
+        }
+
+
         /// <summary>
         /// Clears the item collections of a set of ComboBox controls.
         /// </summary>
@@ -184,6 +260,8 @@ namespace JunX.NET8.WinForms
                 index++;
             }
         }
+        
+        
         /// <summary>
         /// Clears the item collections of a set of ListBox controls.
         /// </summary>
@@ -278,6 +356,8 @@ namespace JunX.NET8.WinForms
                 index++;
             }
         }
+       
+        
         /// <summary>
         /// Sets the maximum selectable date for a collection of DateTimePicker controls.
         /// </summary>
@@ -308,6 +388,8 @@ namespace JunX.NET8.WinForms
             foreach (DateTimePicker dtp in DateTimePickers)
                 dtp.MinDate = MinDate;
         }
+       
+        
         /// <summary>
         /// Clears the data sources of a collection of DataGridView controls.
         /// </summary>
@@ -346,6 +428,174 @@ namespace JunX.NET8.WinForms
             for (int i = 0; i < DataGridViews.Count(); i++)
                 DataGridViews.ElementAt(i).DataSource = DataTables.ElementAt(i);
         }
+       
+        
+        /// <summary>
+        /// Adds a single data point to a chart series with the specified axis label, X value, and Y value.
+        /// </summary>
+        /// <param name="ChartSeries">The chart series to which the data point will be added.</param>
+        /// <param name="AxisLabel">The label to display on the X-axis for this data point.</param>
+        /// <param name="XValue">The numeric X value of the data point.</param>
+        /// <param name="YValue">The numeric Y value of the data point.</param>
+        /// <remarks>
+        /// Creates a new <c>DataPoint</c> with the specified label and values, then appends it to the <c>Points</c> collection of the chart series.
+        /// Useful for dynamically populating chart data in reporting modules, dashboards, or visual analytics.
+        /// Ensure the chart series is initialized and configured before calling.
+        /// Future overloads may support multiple Y values, custom formatting, or metadata tagging.
+        /// </remarks>
+        public static void AddSeriesPoint(Series ChartSeries, string AxisLabel, int XValue, double YValue)
+        {
+            DataPoint DP = new DataPoint();
+            DP.AxisLabel = AxisLabel;
+            DP.XValue = XValue;
+            DP.YValues = new double[] { YValue };
+            ChartSeries.Points.Add(DP);
+        }
+        /// <summary>
+        /// Adds a single data point to a chart series with the specified axis label, X value, and multiple Y values.
+        /// </summary>
+        /// <param name="ChartSeries">The chart series to which the data point will be added.</param>
+        /// <param name="AxisLabel">The label to display on the X-axis for this data point.</param>
+        /// <param name="XValue">The numeric X value of the data point.</param>
+        /// <param name="YValues">A collection of numeric Y values to assign to the data point.</param>
+        /// <remarks>
+        /// Creates a new <c>DataPoint</c> with the specified label and values, then appends it to the <c>Points</c> collection of the chart series.
+        /// Useful for stacked charts, multi-dimensional plotting, or scenarios requiring multiple Y values per point.
+        /// Ensure the chart series is initialized and that the Y value collection is non-null and properly structured.
+        /// </remarks>
+        public static void AddSeriesPoint(Series ChartSeries, string AxisLabel, int XValue, IEnumerable<double> YValues)
+        {
+            DataPoint DP = new DataPoint();
+            DP.AxisLabel = AxisLabel;
+            DP.XValue = XValue;
+            DP.YValues = YValues.ToArray();
+            ChartSeries.Points.Add(DP);
+        }
 
+
+        /// <summary>
+        /// Sets the checked state of a collection of CheckBox controls.
+        /// </summary>
+        /// <param name="CheckBoxes">The collection of CheckBox controls to update.</param>
+        /// <param name="IsChecked">A boolean value indicating whether the checkboxes should be checked.</param>
+        /// <remarks>
+        /// Updates the <c>Checked</c> property of each CheckBox in the collection to the specified value.
+        /// Useful for toggling grouped options, enforcing defaults, or resetting form state in batch operations.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetChecked(IEnumerable<CheckBox> CheckBoxes, bool IsChecked)
+        {
+            foreach (CheckBox chk in CheckBoxes)
+                chk.Checked = IsChecked;
+        }
+
+
+        /// <summary>
+        /// Sets the text alignment for a collection of Label controls.
+        /// </summary>
+        /// <param name="Labels">The collection of Label controls to update.</param>
+        /// <param name="Alignment">The desired text alignment to apply.</param>
+        /// <remarks>
+        /// Updates the <c>TextAlign</c> property of each Label in the collection to the specified <c>ContentAlignment</c> value.
+        /// Useful for enforcing consistent layout, adjusting visual hierarchy, or applying theme-based formatting across multiple labels.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetTextAlign(IEnumerable<Label> Labels, ContentAlignment Alignment)
+        {
+            foreach (Label lbl in Labels)
+                lbl.TextAlign = Alignment;
+        }
+
+
+        /// <summary>
+        /// Sets the hexadecimal display mode for a collection of NumericUpDown controls.
+        /// </summary>
+        /// <param name="NumericUpDowns">The collection of NumericUpDown controls to update.</param>
+        /// <param name="IsHexadecimal">A boolean value indicating whether to enable hexadecimal display mode.</param>
+        /// <remarks>
+        /// Updates the <c>Hexadecimal</c> property of each NumericUpDown in the collection to the specified value.
+        /// Useful for toggling between decimal and hexadecimal input modes in batch, especially in developer tools, configuration panels, or diagnostic UIs.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetHexadecimal(IEnumerable<NumericUpDown> NumericUpDowns, bool IsHexadecimal)
+        {
+            foreach (NumericUpDown nud in NumericUpDowns)
+                nud.Hexadecimal = IsHexadecimal;
+        }
+        /// <summary>
+        /// Sets the value of a collection of NumericUpDown controls.
+        /// </summary>
+        /// <param name="NumericUpDowns">The collection of NumericUpDown controls to update.</param>
+        /// <param name="Value">The decimal value to assign to each control.</param>
+        /// <remarks>
+        /// Updates the <c>Value</c> property of each NumericUpDown in the collection to the specified value.
+        /// Useful for initializing default values, resetting form inputs, or applying consistent numeric settings across grouped controls.
+        /// Ensure the collection is non-null and that each control is properly initialized and within the valid range before calling.
+        /// </remarks>
+        public static void SetValue(IEnumerable<NumericUpDown> NumericUpDowns, decimal Value)
+        {
+            foreach (NumericUpDown nud in NumericUpDowns)
+                nud.Value = Value;
+        }
+        /// <summary>
+        /// Sets the number of decimal places for a collection of <see cref="NumericUpDown"/> controls.
+        /// </summary>
+        /// <param name="NumericUpDowns">The collection of <see cref="NumericUpDown"/> controls to update.</param>
+        /// <param name="DecimalPlaces">The number of decimal places to display.</param>
+        /// <remarks>
+        /// Updates the <c>DecimalPlaces</c> property of each <see cref="NumericUpDown"/> in the collection to the specified value.
+        /// Useful for enforcing consistent numeric precision across grouped inputs, especially in financial, scientific, or configuration forms.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetDecimalPlaces(IEnumerable<NumericUpDown> NumericUpDowns, int DecimalPlaces)
+        {
+            foreach (NumericUpDown nud in NumericUpDowns)
+                nud.DecimalPlaces = DecimalPlaces;
+        }
+        /// <summary>
+        /// Sets the increment value for a collection of <see cref="NumericUpDown"/> controls.
+        /// </summary>
+        /// <param name="NumericUpDowns">The collection of <see cref="NumericUpDown"/> controls to update.</param>
+        /// <param name="Increment">The decimal value to use as the increment step.</param>
+        /// <remarks>
+        /// Updates the <c>Increment</c> property of each <see cref="NumericUpDown"/> in the collection to the specified value.
+        /// Useful for customizing input granularity across grouped controls, especially in configuration panels, scientific inputs, or financial forms.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetIncrement(IEnumerable<NumericUpDown> NumericUpDowns, decimal Increment)
+        {
+            foreach (NumericUpDown nud in NumericUpDowns)
+                nud.Increment = Increment;
+        }
+        /// <summary>
+        /// Sets the maximum allowable value for a collection of NumericUpDown controls.
+        /// </summary>
+        /// <param name="NumericUpDowns">The collection of NumericUpDown controls to update.</param>
+        /// <param name="Maximum">The maximum value to assign to each control.</param>
+        /// <remarks>
+        /// Updates the <c>Maximum</c> property of each NumericUpDown in the collection to the specified value.
+        /// Useful for enforcing upper bounds across grouped inputs, especially in configuration panels, validation workflows, or domain-specific numeric ranges.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetMaximum(IEnumerable<NumericUpDown> NumericUpDowns, decimal Maximum)
+        {
+            foreach (NumericUpDown nud in NumericUpDowns)
+                nud.Maximum = Maximum;
+        }
+        /// <summary>
+        /// Sets the minimum allowable value for a collection of NumericUpDown controls.
+        /// </summary>
+        /// <param name="NumericUpDowns">The collection of NumericUpDown controls to update.</param>
+        /// <param name="Minimum">The minimum value to assign to each control.</param>
+        /// <remarks>
+        /// Updates the <c>Minimum</c> property of each NumericUpDown in the collection to the specified value.
+        /// Useful for enforcing lower bounds across grouped inputs, especially in configuration panels, validation workflows, or domain-specific numeric ranges.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetMinimum(IEnumerable<NumericUpDown> NumericUpDowns, decimal Minimum)
+        {
+            foreach (NumericUpDown nud in NumericUpDowns)
+                nud.Minimum = Minimum;
+        }
     }
 }
