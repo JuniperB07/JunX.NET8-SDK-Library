@@ -388,6 +388,61 @@ namespace JunX.NET8.WinForms
             foreach (DateTimePicker dtp in DateTimePickers)
                 dtp.MinDate = MinDate;
         }
+        /// <summary>
+        /// Sets the display format for a collection of <see cref="DateTimePicker"/> controls.
+        /// </summary>
+        /// <param name="DateTimePickers">The collection of <see cref="DateTimePicker"/> controls to update.</param>
+        /// <param name="Format">The <see cref="DateTimePickerFormat"/> value to apply to each control.</param>
+        /// <remarks>
+        /// Updates the <c>Format</c> property of each <see cref="DateTimePicker"/> in the collection to the specified format.
+        /// Useful for enforcing consistent date/time presentation across grouped controls, especially in forms, reports, or region-specific UIs.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetFormat(IEnumerable<DateTimePicker> DateTimePickers, DateTimePickerFormat Format)
+        {
+            foreach (DateTimePicker dtp in DateTimePickers)
+                dtp.Format = Format;
+        }
+        /// <summary>
+        /// Sets the selected date and time for a collection of <see cref="DateTimePicker"/> controls.
+        /// </summary>
+        /// <param name="DateTimePickers">The collection of <see cref="DateTimePicker"/> controls to update.</param>
+        /// <param name="Value">The <see cref="DateTime"/> value to assign to each control.</param>
+        /// <remarks>
+        /// Updates the <c>Value</c> property of each <see cref="DateTimePicker"/> in the collection to the specified <see cref="DateTime"/>.
+        /// Useful for initializing default timestamps, synchronizing form inputs, or applying consistent date values across grouped controls.
+        /// Ensure the collection is non-null and that each control is properly initialized and within its valid range before calling.
+        /// </remarks>
+        public static void SetValue(IEnumerable<DateTimePicker> DateTimePickers, DateTime Value)
+        {
+            foreach (DateTimePicker dtp in DateTimePickers)
+                dtp.Value = Value;
+        }
+        /// <summary>
+        /// Sets a custom date and time format for a collection of DateTimePicker controls.
+        /// </summary>
+        /// <param name="DateTimePickers">The collection of DateTimePicker controls to update.</param>
+        /// <param name="CustomFormat">The custom format string to apply to each control.</param>
+        /// <exception cref="FormatException">
+        /// Thrown when the format string is invalid or cannot be applied to one or more controls.
+        /// </exception>
+        /// <remarks>
+        /// Updates the <c>CustomFormat</c> property of each DateTimePicker in the collection to the specified format string.
+        /// Useful for applying localized, domain-specific, or user-defined date/time formats across grouped controls.
+        /// Ensure the format string is valid and compatible with the control's current <c>Format</c> setting (typically <c>DateTimePickerFormat.Custom</c>).
+        /// </remarks>
+        public static void SetCustomFormat(IEnumerable<DateTimePicker> DateTimePickers, string CustomFormat)
+        {
+            try
+            {
+                foreach (DateTimePicker dtp in DateTimePickers)
+                    dtp.CustomFormat = CustomFormat;
+            }
+            catch(FormatException fe)
+            {
+                throw new FormatException(fe.Message.ToString());
+            }
+        }
        
         
         /// <summary>
@@ -596,6 +651,83 @@ namespace JunX.NET8.WinForms
         {
             foreach (NumericUpDown nud in NumericUpDowns)
                 nud.Minimum = Minimum;
+        }
+        /// <summary>
+        /// Sets the thousands separator display mode for a collection of NumericUpDown controls.
+        /// </summary>
+        /// <param name="NumericUpDowns">The collection of NumericUpDown controls to update.</param>
+        /// <param name="ThousandsSeparator">A boolean value indicating whether to enable thousands separator formatting.</param>
+        /// <remarks>
+        /// Updates the <c>ThousandsSeparator</c> property of each NumericUpDown in the collection to the specified value.
+        /// Useful for improving numeric readability in financial, statistical, or configuration forms where large values are displayed.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetThousandsSeparator(IEnumerable<NumericUpDown> NumericUpDowns, bool ThousandsSeparator)
+        {
+            foreach (NumericUpDown nud in NumericUpDowns)
+                nud.ThousandsSeparator = ThousandsSeparator;
+        }
+
+
+        /// <summary>
+        /// Sets the active link color for a collection of LinkLabel controls.
+        /// </summary>
+        /// <param name="LinkLabels">The collection of LinkLabel controls to update.</param>
+        /// <param name="ActiveLinkColor">The color to apply when a link is actively being clicked.</param>
+        /// <remarks>
+        /// Updates the <c>ActiveLinkColor</c> property of each LinkLabel in the collection to the specified <see cref="Color"/>.
+        /// Useful for customizing link behavior in themed UIs, accessibility enhancements, or branding-driven styling.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetActiveLinkColor(IEnumerable<LinkLabel> LinkLabels, Color ActiveLinkColor)
+        {
+            foreach (LinkLabel lkl in LinkLabels)
+                lkl.ActiveLinkColor = ActiveLinkColor;
+        }
+        /// <summary>
+        /// Sets the disabled link color for a collection of LinkLabel controls.
+        /// </summary>
+        /// <param name="LinkLabels">The collection of LinkLabel controls to update.</param>
+        /// <param name="DisabledLinkColor">The color to apply when a link is disabled.</param>
+        /// <remarks>
+        /// Updates the <c>DisabledLinkColor</c> property of each LinkLabel in the collection to the specified <see cref="Color"/>.
+        /// Useful for customizing link appearance in disabled states, enhancing accessibility, or applying theme-based styling across multiple controls.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetDisabledLinkColor(IEnumerable<LinkLabel> LinkLabels, Color DisabledLinkColor)
+        {
+            foreach (LinkLabel lkl in LinkLabels)
+                lkl.DisabledLinkColor = DisabledLinkColor;
+        }
+        /// <summary>
+        /// Sets the default link color for a collection of LinkLabel controls.
+        /// </summary>
+        /// <param name="LinkLabels">The collection of LinkLabel controls to update.</param>
+        /// <param name="LinkColor">The color to apply to unvisited links.</param>
+        /// <remarks>
+        /// Updates the <c>LinkColor</c> property of each LinkLabel in the collection to the specified <see cref="Color"/>.
+        /// Useful for customizing link appearance in themed UIs, accessibility enhancements, or branding-driven styling across multiple controls.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetLinkColor(IEnumerable<LinkLabel> LinkLabels, Color LinkColor)
+        {
+            foreach (LinkLabel lkl in LinkLabels)
+                lkl.LinkColor = LinkColor;
+        }
+        /// <summary>
+        /// Sets the visited link color for a collection of LinkLabel controls.
+        /// </summary>
+        /// <param name="LinkLabels">The collection of LinkLabel controls to update.</param>
+        /// <param name="VisitedLinkColor">The color to apply to links that have been visited.</param>
+        /// <remarks>
+        /// Updates the <c>VisitedLinkColor</c> property of each LinkLabel in the collection to the specified <see cref="Color"/>.
+        /// Useful for customizing link appearance in post-navigation states, enhancing accessibility, or applying theme-based styling across multiple controls.
+        /// Ensure the collection is non-null and that each control is properly initialized before calling.
+        /// </remarks>
+        public static void SetVisitedLinkColor(IEnumerable<LinkLabel> LinkLabels, Color VisitedLinkColor)
+        {
+            foreach (LinkLabel lkl in LinkLabels)
+                lkl.VisitedLinkColor  = VisitedLinkColor;
         }
     }
 }
