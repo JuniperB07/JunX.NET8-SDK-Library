@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
@@ -14,9 +15,10 @@ namespace JunX.NET8.WinForms.Controls
     /// </remarks>
     public class RoundedPanel : Panel
     {
-        private CornerRadius _cornerRadius = new CornerRadius(20, 20, 20, 20);
+        private int _topLeft = 20, _topRight = 20, _bottomLeft = 20, _bottomRight = 20, _allCorners = 20;
         private Color _borderColor = Color.Gray;
         private float _borderThickness = 1f;
+        private bool _setAllCorners = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoundedPanel"/> class with double buffering enabled for smoother rendering.
@@ -31,22 +33,118 @@ namespace JunX.NET8.WinForms.Controls
         }
 
         /// <summary>
-        /// Gets or sets the per-corner radius configuration for the control.
+        /// Gets or sets the radius of the top-left corner of the control.
         /// </summary>
         /// <value>
-        /// A <see cref="CornerRadius"/> struct specifying individual radius values for each corner.
+        /// An <see langword="int"/> representing the curvature in pixels for the top-left corner.
         /// </value>
         /// <remarks>
-        /// Allows asymmetric rounding by assigning distinct curvature values to top-left, top-right, bottom-left, and bottom-right corners.
         /// Changing this value triggers a redraw of the control to reflect the updated corner styling.
-        /// Useful for advanced UI theming, card layouts, or custom visual grouping.
+        /// Useful for customizing asymmetric rounded panels or theme-driven UI components.
         /// </remarks>
-        public CornerRadius Radius
+        public int TopLeftCorner
         {
-            get { return _cornerRadius; }
+            get { return _topLeft; }
             set
             {
-                _cornerRadius = value;
+                _topLeft = value;
+                this.Invalidate();
+            }
+        }
+        /// <summary>
+        /// Gets or sets the radius of the top-right corner of the control.
+        /// </summary>
+        /// <value>
+        /// An <see langword="int"/> representing the curvature in pixels for the top-right corner.
+        /// </value>
+        /// <remarks>
+        /// Changing this value triggers a redraw of the control to reflect the updated corner styling.
+        /// Useful for customizing asymmetric rounded panels or theme-driven UI components.
+        /// </remarks>
+        public int TopRightCorner
+        {
+            get { return _topRight; }
+            set
+            {
+                _topRight = value;
+                this.Invalidate();
+            }
+        }
+        /// <summary>
+        /// Gets or sets the radius of the bottom-left corner of the control.
+        /// </summary>
+        /// <value>
+        /// An <see langword="int"/> representing the curvature in pixels for the bottom-left corner.
+        /// </value>
+        /// <remarks>
+        /// Changing this value triggers a redraw of the control to reflect the updated corner styling.
+        /// Useful for customizing asymmetric rounded panels or theme-driven UI components.
+        /// </remarks>
+        public int BottomLeftCorner
+        {
+            get { return _bottomLeft; }
+            set
+            {
+                _bottomLeft = value;
+                this.Invalidate();
+            }
+        }
+        /// <summary>
+        /// Gets or sets the radius of the bottom-right corner of the control.
+        /// </summary>
+        /// <value>
+        /// An <see langword="int"/> representing the curvature in pixels for the bottom-right corner.
+        /// </value>
+        /// <remarks>
+        /// Changing this value triggers a redraw of the control to reflect the updated corner styling.
+        /// Useful for customizing asymmetric rounded panels or theme-driven UI components.
+        /// </remarks>
+        public int BottomRightCorner
+        {
+            get { return _bottomRight; }
+            set
+            {
+                _bottomRight = value;
+                this.Invalidate();
+            }
+        }
+        /// <summary>
+        /// Gets or sets a uniform radius value to apply to all four corners of the control.
+        /// </summary>
+        /// <value>
+        /// An <see langword="int"/> representing the curvature in pixels for all corners.
+        /// </value>
+        /// <remarks>
+        /// This property simplifies styling when symmetric rounding is desired. Setting this value does not automatically update individual corner properties unless explicitly synchronized.
+        /// Changing this value triggers a redraw of the control to reflect the updated corner styling.
+        /// </remarks>
+        public int AllCorners
+        {
+            get { return _allCorners; }
+            set
+            {
+                _allCorners = value;
+                this.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="AllCorners"/> radius should be applied uniformly to all corners.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> to apply the <c>AllCorners</c> value to all corners; otherwise, <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// When enabled, the control uses the <c>AllCorners</c> value to override individual corner settings for consistent rounding.
+        /// Changing this value triggers a redraw of the control to reflect the updated corner logic.
+        /// Useful for toggling between symmetric and asymmetric corner styling in design-time or runtime scenarios.
+        /// </remarks>
+        public bool SetAllCorners
+        {
+            get { return _setAllCorners; }
+            set
+            {
+                _setAllCorners = value;
                 this.Invalidate();
             }
         }
@@ -92,26 +190,52 @@ namespace JunX.NET8.WinForms.Controls
         }
 
         /// <summary>
-        /// Overrides the default paint behavior to render a panel with individually rounded corners and styled borders.
+        /// Overrides the default paint behavior to render a custom-shaped control with either uniform or individually rounded corners and styled borders.
         /// </summary>
         /// <param name="e">A <see cref="PaintEventArgs"/> containing the graphics context and clip rectangle.</param>
         /// <remarks>
-        /// Constructs a <see cref="GraphicsPath"/> using the <see cref="CornerRadius"/> values for each corner, enabling asymmetric rounding.
-        /// Sets the control's <c>Region</c> to match the path and draws the border using the specified <c>BorderColor</c> and <c>BorderThickness</c>.
-        /// Enables <c><see cref="SmoothingMode.AntiAlias"/></c> for high-quality rendering.
-        /// Ideal for modern UI components requiring per-corner styling, card layouts, or theme-driven visual grouping.
+        /// Validates all corner radius values to ensure a minimum of 1 pixel, preventing rendering artifacts.
+        /// If <c>_setAllCorners</c> is <c>true</c>, applies the <c>_allCorners</c> value uniformly to all corners; otherwise, uses individual corner values.
+        /// Constructs a <see cref="GraphicsPath"/> to define the rounded shape and sets the control's <see cref="Region"/> for non-rectangular hit testing.
+        /// Applies anti-aliasing for smooth rendering and draws the border using the specified <c>_borderColor</c> and <c>_borderThickness</c>.
+        /// Supports flexible styling for modern UI components, including symmetric cards and asymmetric panels.
         /// </remarks>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
+            #region Validate Corner Radii
+            if (_topLeft < 1)
+                TopLeftCorner = 1;
+            if (_topRight < 1)
+                TopRightCorner = 1;
+            if (_bottomLeft < 1)
+                BottomLeftCorner = 1;
+            if (_bottomRight < 1)
+                BottomRightCorner = 1;
+            if (_allCorners < 1)
+                AllCorners = 1;
+            #endregion
+
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             GraphicsPath path = new GraphicsPath();
-            path.AddArc(0, 0, _cornerRadius.TopLeft * 2, _cornerRadius.TopLeft * 2, 180, 90); //Top-Left Corner
-            path.AddArc(this.Width - _cornerRadius.TopRight * 2, 0, _cornerRadius.TopRight * 2, _cornerRadius.TopRight * 2, 270, 90); //Top-Right Corner
-            path.AddArc(this.Width - _cornerRadius.BottomRight * 2, this.Height - _cornerRadius.BottomRight * 2, _cornerRadius.BottomRight * 2, _cornerRadius.BottomRight * 2, 0, 90); //Bottom-Right Corner
-            path.AddArc(0, this.Height - _cornerRadius.BottomLeft * 2, _cornerRadius.BottomLeft * 2, _cornerRadius.BottomLeft * 2, 90, 90); //Bottom-Left Corner
+
+            if (_setAllCorners)
+            {
+                path.AddArc(0, 0, _allCorners * 2, _allCorners * 2, 180, 90); //Top-Left Corner
+                path.AddArc(this.Width - _allCorners * 2, 0, _allCorners * 2, _allCorners * 2, 270, 90); //Top-Right Corner
+                path.AddArc(this.Width - _allCorners * 2, this.Height - _allCorners * 2, _allCorners * 2, _allCorners * 2, 0, 90); //Bottom-Right Corner
+                path.AddArc(0, this.Height - _allCorners * 2, _allCorners * 2, _allCorners * 2, 90, 90); //Bottom-Left Corner
+            }
+            else
+            {
+                path.AddArc(0, 0, _topLeft * 2, _topLeft * 2, 180, 90); //Top-Left Corner
+                path.AddArc(this.Width - _topRight * 2, 0, _topRight * 2, _topRight * 2, 270, 90); //Top-Right Corner
+                path.AddArc(this.Width - _bottomRight * 2, this.Height - _bottomRight * 2, _bottomRight * 2, _bottomRight * 2, 0, 90); //Bottom-Right Corner
+                path.AddArc(0, this.Height - _bottomLeft * 2, _bottomLeft * 2, _bottomLeft * 2, 90, 90); //Bottom-Left Corner
+            }
+
             path.CloseFigure();
 
             this.Region = new Region(path);
