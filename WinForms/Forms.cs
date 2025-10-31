@@ -260,6 +260,24 @@ namespace JunX.NET8.WinForms
                 index++;
             }
         }
+        /// <summary>
+        /// Removes one or more specified items from the item collections of multiple <see cref="ComboBox"/> controls.
+        /// </summary>
+        /// <param name="ComboBoxes">An enumerable collection of <see cref="ComboBox"/> controls to process.</param>
+        /// <param name="Item">A parameter array of items to remove from each <see cref="ComboBox"/> if present.</param>
+        /// <remarks>
+        /// This method iterates through each <see cref="ComboBox"/> in the provided collection and attempts to remove each specified item
+        /// from the control's <see cref="ComboBox.ObjectCollection"/>. Items that are not found are silently ignored.
+        /// </remarks>
+        public static void RemoveItem(IEnumerable<ComboBox> ComboBoxes, params object[] Item)
+        {
+            foreach (ComboBox cmb in ComboBoxes)
+            {
+                foreach(object i in Item)
+                    if(cmb.Items.Contains(i))
+                        cmb.Items.Remove(i);
+            }
+        }
 
 
         /// <summary>
