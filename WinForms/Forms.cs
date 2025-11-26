@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JunX.NET8.WinForms.Inputs;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -278,6 +279,18 @@ namespace JunX.NET8.WinForms
                         cmb.Items.Remove(i);
             }
         }
+        /// <summary>
+        /// Removes one or more specified items from the <see cref="ComboBox"/> control.
+        /// </summary>
+        /// <param name="ComboBox">The <see cref="ComboBox"/> control from which items will be removed.</param>
+        /// <param name="Item">An array of items to remove from the control.</param>
+        public static void RemoveItem(ComboBox ComboBox, params object[] Item)
+        {
+            foreach(object i in Item)
+            {
+                ComboBox.Items.Remove(i);
+            }
+        }
 
 
         /// <summary>
@@ -459,6 +472,39 @@ namespace JunX.NET8.WinForms
             catch(FormatException fe)
             {
                 throw new FormatException(fe.Message.ToString());
+            }
+        }
+        /// <summary>
+        /// Configures a <see cref="DateTimePicker"/> control with minimum and maximum date boundaries, and optionally sets its initial value.
+        /// </summary>
+        /// <param name="DateTimePicker">The <see cref="DateTimePicker"/> control to configure.</param>
+        /// <param name="MinDate">The earliest selectable date.</param>
+        /// <param name="MaxDate">The latest selectable date.</param>
+        /// <param name="Value">An optional initial value to assign to the control.</param>
+        public static void Setup(DateTimePicker DateTimePicker, DateTime MinDate, DateTime MaxDate, DateTime? Value = null)
+        {
+            DateTimePicker.MinDate = MinDate;
+            DateTimePicker.MaxDate = MaxDate;
+
+            if (Value != null)
+                DateTimePicker.Value = Value.Value;
+        }
+        /// <summary>
+        /// Configures a collection of <see cref="DateTimePicker"/> controls with minimum and maximum date boundaries, and optionally sets their initial values.
+        /// </summary>
+        /// <param name="DateTimePickers">The collection of <see cref="DateTimePicker"/> controls to configure.</param>
+        /// <param name="MinDate">The earliest selectable date for each control.</param>
+        /// <param name="MaxDate">The latest selectable date for each control.</param>
+        /// <param name="Value">An optional initial value to assign to each control.</param>
+        public static void Setup(IEnumerable<DateTimePicker> DateTimePickers, DateTime MinDate, DateTime MaxDate, DateTime? Value = null)
+        {
+            foreach(DateTimePicker dtp in DateTimePickers)
+            {
+                dtp.MinDate = MinDate;
+                dtp.MaxDate = MaxDate;
+
+                if(Value != null)
+                    dtp.Value = Value.Value;
             }
         }
 

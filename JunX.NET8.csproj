@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ReportViewerCore.WinForms" Version="15.1.26" />
+    <PackageReference Include="Syncfusion.Chart.Windows" Version="31.2.15" />
+    <PackageReference Include="Syncfusion.Core.WinForms" Version="31.2.15" />
+    <PackageReference Include="Syncfusion.Schedule.Windows" Version="31.2.15" />
+    <PackageReference Include="Syncfusion.SfDataGrid.WinForms" Version="31.2.15" />
+    <PackageReference Include="Syncfusion.SfInput.WinForms" Version="31.2.15" />
+    <PackageReference Include="Syncfusion.Shared.Base" Version="31.2.15" />
+    <PackageReference Include="Syncfusion.Tools.Windows" Version="31.2.15" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.10.0" />
   </ItemGroup>
 
